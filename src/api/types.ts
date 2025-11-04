@@ -5,7 +5,6 @@ export type User = {
 
 export type AuthResponse = {
   token: string
-  user: User
 }
 
 export type Movie = {
@@ -26,9 +25,8 @@ export type Cinema = {
 
 export type MovieSession = {
   id: string
-  movieId: string
   cinemaId: string
-  startTime: string // ISO string
+  startTime: string
   seats: {
     rows: number
     cols: number
@@ -43,7 +41,7 @@ export type Booking = {
   movieSessionId: number
   seats: Array<{ rowNumber: number; seatNumber: number }>
   isPaid: boolean
-  bookedAt: string // ISO string
+  bookedAt: string
 }
 
 export type Settings = {

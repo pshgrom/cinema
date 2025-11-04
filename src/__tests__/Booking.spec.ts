@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest'
-import { mount } from '@vue/test-utils'
+import { mount, flushPromises } from '@vue/test-utils'
 import Booking from '../pages/Booking.vue'
 
 vi.mock('vue-router', async (orig) => {
@@ -24,12 +24,12 @@ vi.mock('../api/sessions', () => ({
 describe('Booking', () => {
   it('allows selecting a seat and enables booking button', async () => {
     const wrapper = mount(Booking)
-    await vi.tick()
+    await flushPromises()
     const seats = wrapper.findAll('.booking__seat')
     expect(seats.length).toBe(6)
     const bookBtn = () => wrapper.get('.booking__button')
     expect(bookBtn().attributes('disabled')).toBeDefined()
-    await seats[0].trigger('click')
+    await seats[0]!.trigger('click')
     expect(wrapper.text()).toContain('Выбрано мест: 1')
     expect(bookBtn().attributes('disabled')).toBeUndefined()
   })

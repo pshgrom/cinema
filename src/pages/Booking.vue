@@ -35,7 +35,6 @@ onMounted(async () => {
   loading.value = true
   try {
     const data = await fetchSession(sessionId)
-    // Преобразуем bookedSeats из API формата (rowNumber/seatNumber, 1-based) в внутренний (row/col, 0-based)
     const bookedSeats = (data.bookedSeats || []).map((seat: any) => ({
       row: (seat.rowNumber || seat.row || 0) - 1,
       col: (seat.seatNumber || seat.seat || 0) - 1,
@@ -67,17 +66,15 @@ function toggleSeat(row: number, col: number) {
 
 async function submitBooking() {
   if (!auth.isAuthenticated) {
-    router.push({ name: 'login', query: { redirect: router.currentRoute.value.fullPath } })
+    await router.push({ name: 'login', query: { redirect: router.currentRoute.value.fullPath } })
     return
   }
   if (!session.value || selected.value.length === 0) return
   loading.value = true
   try {
-    const resp  = await bookSeats(session.value.id, selected.value)
-    console.warn('resp', resp)
-    router.push({ name: 'tickets' })
+    await bookSeats(session.value.id, selected.value)
+    await router.push({ name: 'tickets' })
   } catch (e) {
-    console.log('e', e)
     if(e.response?.data?.message) {
       error.value = e.response.data.message
       return
@@ -117,7 +114,7 @@ async function submitBooking() {
         <div class="booking__selected-info" v-if="selected.length > 0">
           Выбрано мест: {{ selected.length }}
         </div>
-        <button class="booking__button" :disabled="selected.length===0" @click="submitBooking">Забронировать</button>
+        <button class="booking__button" :disabled="!selected.length" @click="submitBooking">Забронировать</button>
       </div>
     </div>
   </div>

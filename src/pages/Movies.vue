@@ -47,7 +47,7 @@ function openMovie(movie: Movie) {
         @click="openMovie(m)"
       >
         <div class="movie-card__poster">
-          <img :src="`http://localhost:3022${m.posterImage}`" :alt="m.title" />
+          <img :src="`${API_BASE_URL}${m.posterImage}`" :alt="m.title" />
           <div class="movie-card__rating">{{ m.rating }}</div>
         </div>
         <div class="movie-card__info">

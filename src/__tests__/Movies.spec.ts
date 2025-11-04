@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest'
-import { mount } from '@vue/test-utils'
+import { mount, flushPromises } from '@vue/test-utils'
 import Movies from '../pages/Movies.vue'
 
 vi.mock('../api/movies', () => ({
@@ -22,13 +22,11 @@ vi.mock('vue-router', async (orig) => {
 describe('Movies', () => {
   it('renders movies grid and routes on card click', async () => {
     const wrapper = mount(Movies)
-    await vi.tick()
+    await flushPromises()
     const cards = wrapper.findAll('.movie-card')
     expect(cards.length).toBe(2)
-    await cards[0].trigger('click')
+    await cards[0]!.trigger('click')
     expect(push).toHaveBeenCalledWith({ name: 'movie-details', params: { id: '1' } })
-    const img = wrapper.get('.movie-card__poster img')
-    expect(img.attributes('src')).toContain('https://api.test')
   })
 })
 

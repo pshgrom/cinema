@@ -45,7 +45,7 @@ function formatDate(dateString: string): string {
     <div v-if="loading" class="details__loading">Загрузка…</div>
     <div v-else-if="error" class="details__error">{{ error }}</div>
     
-    <div v-else-if="sessions.length === 0" class="details__empty">
+    <div v-else-if="!sessions.length" class="details__empty">
       Сеансы не найдены
     </div>
     

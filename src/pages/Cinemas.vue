@@ -32,7 +32,7 @@ function openCinema(cinema: Cinema) {
     <div v-if="loading" class="cinemas__loading">Загрузка…</div>
     <div v-else-if="error" class="cinemas__error">{{ error }}</div>
     
-    <div v-else-if="cinemas.length === 0" class="cinemas__empty">
+    <div v-else-if="!cinemas.length" class="cinemas__empty">
       Кинотеатры не найдены
     </div>
     

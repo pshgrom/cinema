@@ -24,9 +24,8 @@ export const useAuthStore = defineStore('auth', {
       this.loading = true
       this.error = null
       try {
-        const { token, user } = await apiLogin(username, password)
+        const { token } = await apiLogin(username, password)
         this.token = token
-        this.user = user
       } catch (e) {
         this.error = 'Неверный логин или пароль. Проверьте введенные данные и попробуйте снова'
         throw e
@@ -38,16 +37,15 @@ export const useAuthStore = defineStore('auth', {
       this.loading = true
       this.error = null
       try {
-        const { token, user } = await apiRegister(username, password)
+        const { token} = await apiRegister(username, password)
         this.token = token
-        this.user = user
       } finally {
         this.loading = false
       }
     },
     logout() {
       apiLogout()
-      this.user = null
+      // this.user = null
       this.token = null
       this.error = null
     },

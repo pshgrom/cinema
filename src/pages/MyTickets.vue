@@ -71,12 +71,9 @@ onMounted(async () => {
     bookings.value = b
     paymentWindowSeconds.value = settings.paymentWindowSeconds || 600
     await loadSessionsFor(b)
-
-    // Запускаем таймер только после загрузки всех данных
     now.value = Date.now()
     timer = window.setInterval(() => {
       now.value = Date.now()
-      // Удаляем только истёкшие неоплаченные билеты
       bookings.value = bookings.value.filter(b => !isExpired(b))
     }, 1000)
   } catch (e) {
@@ -143,43 +140,43 @@ function getSessionTime(movieSessionId: number | string): string {
     <div v-else class="tickets__columns">
       <section>
         <h3>Неоплаченные</h3>
-        <div v-if="unpaid.length === 0" class="tickets__empty">Нет неоплаченных билетов</div>
-        <div v-for="b in unpaid" :key="b.id" class="ticket ticket--unpaid">
-          <div class="ticket__id">Билет #{{ b.id.slice(0, 8) }}</div>
-          <div class="ticket__session">Сеанс: {{ b.movieSessionId }}</div>
-          <div class="ticket__time">Начало: {{ getSessionTime(b.movieSessionId) }}</div>
+        <div v-if="!unpaid.length" class="tickets__empty">Нет неоплаченных билетов</div>
+        <div v-for="ticket in unpaid" :key="ticket.id" class="ticket ticket--unpaid">
+          <div class="ticket__id">Билет #{{ ticket.id.slice(0, 8) }}</div>
+          <div class="ticket__session">Сеанс: {{ ticket.movieSessionId }}</div>
+          <div class="ticket__time">Начало: {{ getSessionTime(ticket.movieSessionId) }}</div>
           <div class="ticket__seats">
-            Места: {{ b.seats.map(s => `Ряд ${s.rowNumber}, Место ${s.seatNumber}`).join(', ') }}
+            Места: {{ ticket.seats.map(s => `Ряд ${s.rowNumber}, Место ${s.seatNumber}`).join(', ') }}
           </div>
-          <div class="ticket__timer" :class="{ 'ticket__timer--warning': remainingSeconds(b) < 60 }">
-            Осталось: {{ formatTime(remainingSeconds(b)) }}
+          <div class="ticket__timer" :class="{ 'ticket__timer--warning': remainingSeconds(ticket) < 60 }">
+            Осталось: {{ formatTime(remainingSeconds(ticket)) }}
           </div>
-          <button class="ticket__pay-button" @click="pay(b)">Оплатить</button>
+          <button class="ticket__pay-button" @click="pay(ticket)">Оплатить</button>
         </div>
       </section>
 
       <section>
         <h3>Будущие</h3>
-        <div v-if="future.length === 0" class="tickets__empty">Нет будущих билетов</div>
-        <div v-for="b in future" :key="b.id" class="ticket ticket--paid">
-          <div class="ticket__id">Билет #{{ b.id.slice(0, 8) }}</div>
-          <div class="ticket__session">Сеанс: {{ b.movieSessionId }}</div>
-          <div class="ticket__time">Начало: {{ getSessionTime(b.movieSessionId) }}</div>
+        <div v-if="!future.length" class="tickets__empty">Нет будущих билетов</div>
+        <div v-for="ticket in future" :key="ticket.id" class="ticket ticket--paid">
+          <div class="ticket__id">Билет #{{ ticket.id.slice(0, 8) }}</div>
+          <div class="ticket__session">Сеанс: {{ ticket.movieSessionId }}</div>
+          <div class="ticket__time">Начало: {{ getSessionTime(ticket.movieSessionId) }}</div>
           <div class="ticket__seats">
-            Места: {{ b.seats.map(s => `Ряд ${s.rowNumber}, Место ${s.seatNumber}`).join(', ') }}
+            Места: {{ ticket.seats.map(s => `Ряд ${s.rowNumber}, Место ${s.seatNumber}`).join(', ') }}
           </div>
         </div>
       </section>
 
       <section>
         <h3>Прошедшие</h3>
-        <div v-if="past.length === 0" class="tickets__empty">Нет прошедших билетов</div>
-        <div v-for="b in past" :key="b.id" class="ticket ticket--past">
-          <div class="ticket__id">Билет #{{ b.id.slice(0, 8) }}</div>
-          <div class="ticket__session">Сеанс: {{ b.movieSessionId }}</div>
-          <div class="ticket__time">Начало: {{ getSessionTime(b.movieSessionId) }}</div>
+        <div v-if="!past.length" class="tickets__empty">Нет прошедших билетов</div>
+        <div v-for="ticket in past" :key="ticket.id" class="ticket ticket--past">
+          <div class="ticket__id">Билет #{{ ticket.id.slice(0, 8) }}</div>
+          <div class="ticket__session">Сеанс: {{ ticket.movieSessionId }}</div>
+          <div class="ticket__time">Начало: {{ getSessionTime(ticket.movieSessionId) }}</div>
           <div class="ticket__seats">
-            Места: {{ b.seats.map(s => `Ряд ${s.rowNumber}, Место ${s.seatNumber}`).join(', ') }}
+            Места: {{ ticket.seats.map(s => `Ряд ${s.rowNumber}, Место ${s.seatNumber}`).join(', ') }}
           </div>
         </div>
       </section>

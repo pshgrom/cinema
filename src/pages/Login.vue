@@ -16,7 +16,7 @@ async function submit() {
   try {
     await auth.login(username.value, password.value)
     const redirect = (route.query.redirect as string) || '/tickets'
-    router.replace(redirect)
+    await router.replace(redirect)
   } catch (e) {
     error.value = auth.error
   }

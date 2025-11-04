@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest'
-import { mount } from '@vue/test-utils'
+import { mount, flushPromises } from '@vue/test-utils'
 import MyTickets from '../pages/MyTickets.vue'
 
 vi.useFakeTimers()
@@ -24,7 +24,7 @@ vi.mock('../api/sessions', () => ({
 describe('MyTickets', () => {
   it('groups tickets and shows sections', async () => {
     const wrapper = mount(MyTickets)
-    await vi.tick()
+    await flushPromises()
     expect(wrapper.text()).toContain('Неоплаченные')
     expect(wrapper.text()).toContain('Будущие')
     const unpaid = wrapper.findAll('.ticket.ticket--unpaid')
